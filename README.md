@@ -13,3 +13,7 @@ Type a note and tap "Drop a marble". It's added to the list with a coloured dot,
 ## Running it
 
 Open the project in Android Studio, let Gradle sync, then run it on an emulator or a connected phone. I tested it on the Medium Phone emulator (API 37).
+
+## Author
+
+Aayurshi Gawande
