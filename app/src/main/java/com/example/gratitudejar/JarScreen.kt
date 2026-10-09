@@ -1,5 +1,7 @@
 package com.example.gratitudejar
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +12,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import org.json.JSONArray
 
 private val marbleColors = listOf(
     Color(0xFFE57373),
@@ -26,10 +30,30 @@ private fun colorFor(note: String): Color {
     return marbleColors[index]
 }
 
+private const val PREFS_NAME = "gratitude_jar"
+private const val KEY_NOTES = "notes"
+
+private fun loadNotes(prefs: SharedPreferences): List<String> {
+    val raw = prefs.getString(KEY_NOTES, null) ?: return emptyList()
+    return try {
+        val array = JSONArray(raw)
+        List(array.length()) { array.getString(it) }
+    } catch (e: Exception) {
+        emptyList()
+    }
+}
+
+private fun saveNotes(prefs: SharedPreferences, notes: List<String>) {
+    prefs.edit().putString(KEY_NOTES, JSONArray(notes).toString()).apply()
+}
+
 @Composable
 fun JarScreen(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
+
     var text by remember { mutableStateOf("") }
-    val notes = remember { mutableStateListOf<String>() }
+    val notes = remember { mutableStateListOf<String>().apply { addAll(loadNotes(prefs)) } }
     var memory by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -54,6 +78,7 @@ fun JarScreen(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
                     notes.add(0, text.trim())
+                    saveNotes(prefs, notes)
                     text = ""
                 },
                 enabled = text.isNotBlank()
