@@ -8,7 +8,7 @@ I built it in Kotlin with Jetpack Compose as a small project to get comfortable 
 
 ## How it works
 
-Type a note and tap "Drop a marble". It's added to the list with a coloured dot, and the count at the top goes up. "Pull a memory" picks one of your saved notes at random and shows it in a card at the top.
+Type a note and tap "Drop a marble". It's added to the list with a coloured dot, and the count at the top goes up. "Pull a memory" picks one of your saved notes at random and shows it in a card at the top.Notes are saved on the device, so they're still there when you reopen the app.
 
 ## Running it
 
